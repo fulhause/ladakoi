@@ -215,15 +215,15 @@ a{color:inherit}
 .ev .meta{margin:6px 0 14px;display:flex;flex-wrap:wrap;gap:8px;font-size:13px}
 .ev .meta span{padding:3px 12px;border-radius:999px;background:var(--bg2);color:var(--sub);font-weight:700}
 .ev .meta .who{background:var(--c);color:#fff}
-.adv{background:var(--navy);color:#F2F0FF;border-radius:var(--r-md);padding:16px 16px 12px;border:2px solid color-mix(in srgb,var(--c) 60%,transparent)}
-.adv .ln{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:start;padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
-.adv .ln:first-child{border-top:0}
-.adv .av{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:50% 12%;background:#2A2F6E}
-.adv .nm{display:block;font-size:12px;font-weight:800;margin-bottom:2px}
-.adv .tx{font-size:15px;line-height:1.7}
-.adv .ln.sys{grid-template-columns:1fr}
-.adv .ln.sys .tx{color:#B6B7DD;font-size:14px}
-.adv .more{margin:10px 0 0;text-align:right;font-size:13px;color:#FFB3D0;font-weight:700}
+.talkwin{background:var(--navy);color:#F2F0FF;border-radius:var(--r-md);padding:16px 16px 12px;border:2px solid color-mix(in srgb,var(--c) 60%,transparent)}
+.talkwin .ln{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:start;padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
+.talkwin .ln:first-child{border-top:0}
+.talkwin .av{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:50% 12%;background:#2A2F6E}
+.talkwin .nm{display:block;font-size:12px;font-weight:800;margin-bottom:2px}
+.talkwin .tx{font-size:15px;line-height:1.7}
+.talkwin .ln.sys{grid-template-columns:1fr}
+.talkwin .ln.sys .tx{color:#B6B7DD;font-size:14px}
+.talkwin .more{margin:10px 0 0;text-align:right;font-size:13px;color:#FFB3D0;font-weight:700}
 .lb{position:fixed;inset:0;z-index:60;background:rgba(10,12,34,.92);display:none;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 16px)}
 .lb.on{display:flex}
 .lb figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px;max-height:100%}
@@ -544,7 +544,7 @@ const NAME={rire:'灯野 リレ',kanade:'時任 カナデ',tsunagi:'千早 ツ�
 $('events').innerHTML=EVS.map((e,i)=>`<article class="ev" style="--c:${WHO[e.who][1]}">
  <button class="shot" data-i="${i}" aria-label="イベントCG「${e.title}」を大きく見る"><img src="${A.cgt[e.cg]}" alt="イベントCG「${e.title}」"></button>
  <div><h3>「${e.title}」</h3><p class="meta"><span class="who">${WHO[e.who][0]}</span><span>${e.when}で解放</span></p>
- <div class="adv">${e.lines.map(([s,x])=>s==='sys'?`<div class="ln sys"><span class="tx">${x}</span></div>`:`<div class="ln"><img class="av" src="${A.chars[s].h}" alt=""><span><span class="nm" style="color:var(--${s})">${NAME[s]}</span><span class="tx">${x}</span></span></div>`).join('')}
+ <div class="talkwin">${e.lines.map(([s,x])=>s==='sys'?`<div class="ln sys"><span class="tx">${x}</span></div>`:`<div class="ln"><img class="av" src="${A.chars[s].h}" alt=""><span><span class="nm" style="color:var(--${s})">${NAME[s]}</span><span class="tx">${x}</span></span></div>`).join('')}
  <p class="more">…続きはゲームで</p></div></div></article>`).join('');
 const vis=EVS.map(e=>[e.cg,e.title,e.when,e.who]);
 $('events').addEventListener('click',e=>{const b=e.target.closest('.shot');if(b)openLb(+b.dataset.i);});
