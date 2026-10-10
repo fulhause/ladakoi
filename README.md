@@ -2,7 +2,7 @@
 
 新ライン稼働の3日前、制御盤のプログラムが消えた。3人の先輩と回路を組み直す、PLC×恋愛の学習アドベンチャーです。
 
-- 公式サイト: https://fulhause.github.io/ladakoi/
+- 公式サイト: https://fulhause.github.io/ladakoi/ （ギャルゲーで学ぶPLCプログラミング／ラダー図入門の無料ブラウザゲーム）
 - ゲーム: https://fulhause.github.io/ladakoi/game/
 - オープニングムービー: https://youtu.be/qcoiutV5mSg
 - 挿入歌ムービー: https://youtu.be/aoeo3eDsvUQ
