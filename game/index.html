@@ -58,7 +58,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-o
 .t-spon .tsl{font-size:9px;font-weight:800;letter-spacing:.26em;line-height:1.3;color:var(--sub);margin-bottom:2px}
 .t-spon .tsm{font-size:11.5px;font-weight:800;line-height:1.45;letter-spacing:0;margin-bottom:5px}
 .t-spon .tsm span{display:inline-block}
-.t-spon .tsc{display:block;line-height:0}
+.t-spon .tsc{display:inline-block;line-height:0;padding:5px 12px;margin:-5px -12px;border-radius:10px;-webkit-tap-highlight-color:rgba(0,0,0,.08)}
+.t-spon .tsc:hover{background:rgba(31,37,54,.06)}
+.t-spon .tsc:focus-visible{outline:3px solid var(--sub);outline-offset:1px}
 .t-spon .tsc img{height:18px;width:auto}
 @media (min-height:760px) and (max-aspect-ratio:3/4){.t-spon{margin-top:4px;padding:9px 18px 12px}.t-spon .tsl{font-size:10px;margin-bottom:4px}.t-spon .tsm{font-size:min(14px,3.55vw);line-height:1.55;margin-bottom:8px}.t-spon .tsc img{height:24px}}
 @media (min-width:460px){.t-spon .tbr{display:none}}
@@ -3045,7 +3047,7 @@ if(!SAVE.v){const shift=o=>{const n={};for(const k in o){const i=+k;n[(!isNaN(i)
 if(SAVE.v===2){const conv=o=>{const n={};for(const k in o){const i=+k;n[(!isNaN(i)&&IDS_V2[i])?IDS_V2[i]:k]=o[k];}return n;};['clear','best','progs','sp'].forEach(k=>SAVE[k]=conv(SAVE[k]||{}));SAVE.v=3;try{localStorage.setItem(KEY,JSON.stringify(SAVE));}catch(e){}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(SAVE));}catch(e){}}
 const S={si:0,prog:null,res:null,man:null,pick:null,fr:null,hx:null,dc:null,play:null,hint:0};
-const VERSION='0.25.4';
+const VERSION='0.25.5';
 const sid=i=>STAGES[i].id;
 const firstBonus=()=>STAGES.findIndex(s=>s.bonus);
 const stageNo=i=>{if(!STAGES[i]||!STAGES[i].bonus)return pad2(i+1);const c=CHAPTERS.find(c=>i>=c.range[0]&&i<c.range[1]);return (c&&c.prefix||'EX')+(i-(c?c.range[0]:firstBonus())+1);};
@@ -3182,7 +3184,7 @@ function goTitle(){stopAll();layer.innerHTML='';S.scr='title';
  <span class="ver">ver ${VERSION}</span><div class="t-logo">${typeof LOGO!=='undefined'?`<h1 class="imglogo"><img src="${LOGO}" alt="ラダ恋！ LADDER × LOVE"></h1>`:`<h1>ラダ恋！</h1>${rungLogo()}`}<p class="sub">PLCと通信の工場復旧ログ</p></div>
  <div class="t-cast"><div class="p p1 anim breath" style="--bd:1.2s">${portrait('kanade','n')}</div><div class="p p3 anim breath" style="--bd:2.6s">${portrait('tsunagi','w')}</div><div class="p p2 anim breath">${portrait('rire','h')}</div></div>
  <div class="t-menu"><button class="btn pk" data-act="toSelect">${cleared()?'つづきから':'はじめる'}</button><div class="mvrow"><a class="btn opmv" href="https://youtu.be/qcoiutV5mSg" target="_blank" rel="noopener"><span class="yt">▶</span>オープニング</a><a class="btn opmv" href="https://youtu.be/aoeo3eDsvUQ" target="_blank" rel="noopener"><span class="yt">▶</span>挿入歌</a>${allClear()?'<a class="btn opmv" href="https://youtu.be/pcVaANS8AAE" target="_blank" rel="noopener"><span class="yt">▶</span>エンディング</a>':''}</div>
- <div class="row"><button class="btn sm" data-act="toChars">キャラクター</button><button class="btn sm" data-act="toNotes">技術ノート集</button><button class="btn sm" data-act="toGloss">用語集</button>${allClear()?'':'<button class="btn sm" data-act="unlockAll">全解放（確認用）</button>'}${cleared()?'<button class="btn sm" data-act="reset">記録を消す</button>':''}</div><button class="xferlink" data-act="xfer">🔁 セーブの引き継ぎ（別の URL で遊ぶとき）</button><div class="t-spon" aria-label="スポンサー"><p class="tsl">SPONSORED BY</p><p class="tsm"><span>ラダ恋！は、</span><span>以下のスポンサーのご支援により、</span><br class="tbr"><span>開発を継続しています。</span></p><span class="tsc"><img src="${SPON_GUGEN}" alt="GUGEN" width="360" height="52"></span></div></div></div>`;fitTitleSoon();}
+ <div class="row"><button class="btn sm" data-act="toChars">キャラクター</button><button class="btn sm" data-act="toNotes">技術ノート集</button><button class="btn sm" data-act="toGloss">用語集</button>${allClear()?'':'<button class="btn sm" data-act="unlockAll">全解放（確認用）</button>'}${cleared()?'<button class="btn sm" data-act="reset">記録を消す</button>':''}</div><button class="xferlink" data-act="xfer">🔁 セーブの引き継ぎ（別の URL で遊ぶとき）</button><div class="t-spon" aria-label="スポンサー"><p class="tsl">SPONSORED BY</p><p class="tsm"><span>ラダ恋！は、</span><span>以下のスポンサーのご支援により、</span><br class="tbr"><span>開発を継続しています。</span></p><a class="tsc" href="https://gugen-inc-sp.com/" target="_blank" rel="sponsored noopener" title="GUGEN のサイトを開く（新しいタブ）"><img src="${SPON_GUGEN}" alt="GUGEN" width="360" height="52"></a></div></div></div>`;fitTitleSoon();}
 // ===== タイトル画面：一番下のスポンサー枠のぶん立ち絵を上げ、ロゴにかかるときは縮める =====
 function fitTitle(){if(S.scr!=='title')return;const sp=app.querySelector('.t-spon'),c=app.querySelector('.t-cast'),m=app.querySelector('.t-menu'),lg=app.querySelector('.t-logo');if(!sp||!c||!m||!lg)return;c.style.setProperty('--cs','1');sp.style.display='none';const h0=m.offsetHeight;sp.style.display='';c.style.bottom=(104+m.offsetHeight-h0)+'px';const ps=[...c.querySelectorAll('.p')];if(!ps.length)return;const top=Math.min(...ps.map(e=>e.getBoundingClientRect().top)),cb=c.getBoundingClientRect().bottom,lim=lg.getBoundingClientRect().bottom+6;if(top<lim&&cb-top>40)c.style.setProperty('--cs',Math.max(.6,(cb-lim)/(cb-top)).toFixed(3));}
 function fitTitleSoon(){requestAnimationFrame(fitTitle);app.querySelectorAll('.t-cast img,.t-logo img,.t-spon img').forEach(im=>{if(!im.complete)im.addEventListener('load',fitTitle,{once:true});});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);}
