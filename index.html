@@ -280,12 +280,14 @@ a{color:inherit}
 .ftr img{height:54px;width:auto;margin:0 auto 16px}
 .ftr .btn{margin:0 0 20px}
 .hash{font-family:var(--font-disp);font-weight:800;color:#fff;font-size:15px}
-.sponsor{max-width:560px;margin:6px auto 22px;padding-top:22px;border-top:1px solid rgba(255,255,255,.16)}
-.sp-label{margin:0 0 10px;font-family:var(--font-disp);font-weight:800;font-size:13px;letter-spacing:.28em;color:var(--onNavySub)}
-.sp-msg{margin:0 0 18px;font-family:var(--font-disp);font-weight:800;font-size:clamp(16px,4.1vw,21px);line-height:1.7;color:#fff;letter-spacing:.04em}
+.sponsor-sec{padding:44px 0 0;text-align:center}
+.sponsor-sec .wrap{padding-bottom:40px;border-bottom:1px dashed var(--line)}
+.sponsor{max-width:680px;margin:0 auto}
+.sp-label{margin:0 0 10px;font-family:var(--font-disp);font-weight:800;font-size:13px;letter-spacing:.28em;color:var(--sub)}
+.sp-msg{margin:0 0 20px;font-family:var(--font-disp);font-weight:800;font-size:clamp(16px,4.1vw,21px);line-height:1.7;color:var(--ink);letter-spacing:.04em}
 .sp-list{display:flex;justify-content:center;flex-wrap:wrap;gap:16px}
-.sp-card{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;padding:14px 26px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
-.ftr .sp-card img{height:36px;width:auto;margin:0}
+.sp-card{display:inline-flex;align-items:center;justify-content:center;background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 26px;box-shadow:0 6px 18px rgba(28,33,80,.10)}
+.sp-card img{height:36px;width:auto;margin:0}
 </style>
 </head>
 <body>
@@ -327,6 +329,15 @@ a{color:inherit}
       </div>
     </div>
   </div>
+  <div class="sponsor-sec"><div class="wrap">
+      <div class="sponsor" aria-label="スポンサー">
+        <p class="sp-label">SPONSORED BY</p>
+        <p class="sp-msg"><span class="nw">ラダ恋！は、</span><span class="nw">以下のスポンサーのご支援により、</span><span class="nw">開発を継続しています。</span></p>
+        <div class="sp-list">
+          <span class="sp-card"><img src="img/sponsor-gugen.png" alt="GUGEN" width="600" height="121" loading="lazy"></span>
+        </div>
+      </div>
+  </div></div>
   <div class="sec"><div class="wrap about">
     <div>
       <h3>ギャルゲーで学ぶ、PLCプログラミング</h3>
@@ -492,13 +503,6 @@ a{color:inherit}
     <img loading="lazy" src="img/logo.webp" id="ftrLogo" alt="ラダ恋！">
     <div><a class="btn play" href="./game/" target="_blank" rel="noopener">無料でプレイする</a></div>
     <p class="hash">#ラダ恋</p>
-    <div class="sponsor" aria-label="スポンサー">
-      <p class="sp-label">SPONSORED BY</p>
-      <p class="sp-msg"><span class="nw">ラダ恋！は、</span><span class="nw">以下のスポンサーのご支援により、</span><span class="nw">開発を継続しています。</span></p>
-      <div class="sp-list">
-        <span class="sp-card"><img src="img/sponsor-gugen.png" alt="GUGEN" width="600" height="121" loading="lazy"></span>
-      </div>
-    </div>
     <p>© 2026 fulhause</p>
   </div>
 </footer>
