@@ -3,7 +3,7 @@
 // - 画像（assets/）は名前に中身のハッシュが入っているので、一度保存したら使い回す。
 // - インストール時に画像をまとめて保存しておき、電波のない場所でも遊べるようにする。
 // VERSION と ASSETS は tools/split_assets.py が index.html に合わせて書き換える。
-const VERSION='0.26.0';
+const VERSION='0.26.1';
 const ASSETS=/*@ASSETS*/[
 "./assets/bgdata.e1ecfb93.webp",
 "./assets/bgs-office.d399172d.webp",
