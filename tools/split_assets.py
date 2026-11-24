@@ -76,7 +76,10 @@ def main():
     out.append(s[last:])
     s = ''.join(out)
 
-    used = sorted(set(ASSET_RE.findall(s)))
+    # 前回書き込んだ IMGDIM ブロックの中の名前は「使っている」に数えない
+    # （数えると、差し替えた古い画像がいつまでも残ってしまう）
+    body = re.sub(r'/\*@IMGDIM\*/.*?/\*@/IMGDIM\*/', '', s, flags=re.S)
+    used = sorted(set(ASSET_RE.findall(body)))
     dims = {}
     for p in used:
         fp = os.path.join(GAME, p)
