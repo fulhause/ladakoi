@@ -1,9 +1,10 @@
 // ラダ恋！ サービスワーカー
-// - ゲーム本体（index.html）はネット優先。つながらない・遅いときは保存しておいた版を出す。
+// - ゲーム本体（index.html）は保存しておいた版をすぐ出し、裏でネットから最新版を取ってくる。
+//   版が変わっていたら画面に「新しい版があります」と知らせる（次に開いたときは自動で新しい版）。
 // - 画像（assets/）は名前に中身のハッシュが入っているので、一度保存したら使い回す。
 // - インストール時に画像をまとめて保存しておき、電波のない場所でも遊べるようにする。
 // VERSION と ASSETS は tools/split_assets.py が index.html に合わせて書き換える。
-const VERSION='0.26.1';
+const VERSION='0.26.2';
 const ASSETS=/*@ASSETS*/[
 "./assets/bgdata.e1ecfb93.webp",
 "./assets/bgs-office.d399172d.webp",
@@ -207,16 +208,35 @@ self.addEventListener('activate',e=>{e.waitUntil((async()=>{
   const img=await caches.open(IMG);
   for(const r of await img.keys()){if(!keep.has(r.url))await img.delete(r);}
   await self.clients.claim();
+  // 新しい版のサービスワーカーに替わったら、開いている画面に知らせる（画面側で版を比べる）
+  for(const c of await self.clients.matchAll({type:'window'}))c.postMessage({type:'ladakoi-update',version:VERSION});
 })());});
 
-async function pageFirst(req){
+// ゲーム本体は、保存しておいた版をすぐ出す（起動を待たせない）。
+// 裏でネットから最新版を取ってきて保存し、版が変わっていたら画面に「新しい版があります」と知らせる。
+const verOf=t=>(/const VERSION='([^']+)'/.exec(t)||[])[1]||'';
+async function pageFast(e){
   const cache=await caches.open(CORE);
-  const net=fetch(req).then(r=>{if(r.ok)cache.put(PAGE,r.clone());return r;});
   const cached=await cache.match(PAGE);
+  // 画面に渡すと中身が読めなくなるので、比べる用に先に写しておく
+  const oldCopy=cached&&cached.clone();
+  // ブラウザのキャッシュ（GitHub Pages は10分）に止められないよう、毎回サーバーに確かめる
+  const net=fetch(cached?PAGE:e.request,cached?{cache:'no-cache',credentials:'same-origin'}:undefined).then(async r=>{
+    if(!r.ok)return r;
+    if(!cached){await cache.put(PAGE,r.clone());return r;}
+    const [oldT,newT]=await Promise.all([oldCopy.text(),r.clone().text()]);
+    await cache.put(PAGE,r.clone());
+    const v=verOf(newT);
+    if(v&&v!==verOf(oldT)){
+      // 開いたばかりの画面が準備できるのを少し待ってから知らせる
+      await new Promise(res=>setTimeout(res,1500));
+      for(const c of await self.clients.matchAll({type:'window'}))c.postMessage({type:'ladakoi-update',version:v});
+    }
+    return r;
+  });
   if(!cached)return net;
-  net.catch(()=>{});
-  // 3.5秒待ってもネットから来なければ、保存しておいた版を出す（ネットの分は裏で保存される）
-  return Promise.race([net.catch(()=>cached),new Promise(res=>setTimeout(()=>res(cached),3500))]);
+  e.waitUntil(net.catch(()=>{}));
+  return cached;
 }
 async function cacheFirst(req,name){
   const cache=await caches.open(name);
@@ -241,7 +261,7 @@ self.addEventListener('fetch',e=>{
   if(url.origin===scope.origin){
     if(!url.pathname.startsWith(scope.pathname))return;
     const rel=url.pathname.slice(scope.pathname.length);
-    if(req.mode==='navigate'||rel===''||rel==='index.html'){e.respondWith(pageFirst(req));return;}
+    if(req.mode==='navigate'||rel===''||rel==='index.html'){e.respondWith(pageFast(e));return;}
     if(rel.startsWith('assets/')){e.respondWith(cacheFirst(req,IMG));return;}
     if(rel.startsWith('audio/')){e.respondWith(cacheFirst(req,MEDIA));return;}
     if(rel==='manifest.webmanifest'){e.respondWith(staleWhileRevalidate(req,CORE));return;}

@@ -29,7 +29,8 @@
 <title>ラダ恋！ PLCと通信の工場復旧ログ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
  --bg:#D5D4CA;--panel:#E8E7DF;--panel2:#F3F2EC;--ink:#1F2536;--sub:#5B6173;--line:#B7B6AB;
@@ -536,10 +537,18 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-o
 .cr-ty{font-weight:800;font-size:18px;margin:8px 0 10px;color:var(--heart)}
 .cr-note{font-size:11.5px;color:var(--sub);line-height:1.65;margin:12px 0 0;text-align:left}
 .cr-c{margin:10px 0 0;font-size:12px;color:var(--sub)}
+.boot{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#fff;background:linear-gradient(180deg,#FFB27A 0%,#F58CA8 45%,#6A6FC9 100%);font-family:system-ui,-apple-system,"Hiragino Sans",sans-serif}
+.boot-logo{font-size:46px;font-weight:900;letter-spacing:.04em;text-shadow:0 3px 0 rgba(120,40,80,.35)}
+.boot-sub{font-size:12px;font-weight:800;letter-spacing:.3em;opacity:.9}
+.boot-bar{width:120px;height:4px;margin-top:14px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
+.boot-bar i{display:block;width:40%;height:100%;border-radius:2px;background:#fff;animation:bootbar .9s ease-in-out infinite alternate}
+@keyframes bootbar{to{transform:translateX(150%)}}
+.updbar{position:fixed;z-index:200;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);max-width:536px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:8px 10px 8px 14px;border-radius:var(--r-md);background:var(--ink);color:var(--panel);box-shadow:0 10px 30px rgba(10,16,40,.35);font-size:13px;font-weight:800;animation:up .25s ease-out}
+.updbar span{flex:1;line-height:1.4}.updbar .btn{flex:none}.updbar .x{flex:none;width:30px;height:30px;font-size:16px;color:inherit;opacity:.7}
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><div class="boot" role="status" aria-label="読み込み中"><div class="boot-logo">ラダ恋！</div><div class="boot-sub">LADDER × LOVE</div><div class="boot-bar"><i></i></div></div></div>
 <div id="layer"></div>
 <script>
 // ===== ENGINE =====
@@ -3099,7 +3108,7 @@ if(!SAVE.v){const shift=o=>{const n={};for(const k in o){const i=+k;n[(!isNaN(i)
 if(SAVE.v===2){const conv=o=>{const n={};for(const k in o){const i=+k;n[(!isNaN(i)&&IDS_V2[i])?IDS_V2[i]:k]=o[k];}return n;};['clear','best','progs','sp'].forEach(k=>SAVE[k]=conv(SAVE[k]||{}));SAVE.v=3;try{localStorage.setItem(KEY,JSON.stringify(SAVE));}catch(e){}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(SAVE));}catch(e){}}
 const S={si:0,prog:null,res:null,man:null,pick:null,fr:null,hx:null,dc:null,play:null,hint:0};
-const VERSION='0.26.1';
+const VERSION='0.26.2';
 const sid=i=>STAGES[i].id;
 const firstBonus=()=>STAGES.findIndex(s=>s.bonus);
 const stageNo=i=>{if(!STAGES[i]||!STAGES[i].bonus)return pad2(i+1);const c=CHAPTERS.find(c=>i>=c.range[0]&&i<c.range[1]);return (c&&c.prefix||'EX')+(i-(c?c.range[0]:firstBonus())+1);};
@@ -3723,6 +3732,8 @@ async function migPaste(){let t='';try{if(navigator.clipboard&&navigator.clipboa
  const m=String(t||'').match(/LDK[12]\.[A-Za-z0-9_-]+/);
  if(m){try{const o=await readCode(m[0]);mergeSave(o);goTitle();notice(`Safari の記録を引き継ぎました（クリア ${cleared()} ステージ）。続きから遊べます。`);return;}catch(e){}}
  showXfer('Safari の「記録をコピー」で写したコードを、②の欄に長押しで貼りつけて「読み込む」を押してください。');}
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};if(d.type==='ladakoi-update'&&d.version&&d.version!==VERSION)showUpdate(d.version);});
+function showUpdate(v){if($('.updbar'))return;const d=document.createElement('div');d.className='updbar';d.setAttribute('role','status');d.innerHTML=`<span>新しい版（ver ${esc(v)}）があります</span><button class="btn sm go" data-act="doUpdate">更新する</button><button class="x" data-act="updClose" aria-label="あとで">✕</button>`;document.body.appendChild(d);}
 function regSW(){if(!('serviceWorker' in navigator)||!window.isSecureContext||!/^https?:$/.test(location.protocol))return;const go=()=>setTimeout(()=>navigator.serviceWorker.register('sw.js').catch(()=>{}),1500);if(document.readyState==='complete')go();else window.addEventListener('load',go);}
 
 // ---- クレジットと報告 ----
@@ -3764,6 +3775,8 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if
  case'bkSave':bkSave();break;
  case'bkLoad':$('#bkf').click();break;
  case'migCopy':migCopy();break;
+ case'doUpdate':location.reload();break;
+ case'updClose':{const u=$('.updbar');if(u)u.remove();}break;
  case'migPaste':migPaste();break;
  case'bkHide':PREF.bkHide=Date.now();saveCfg();{const b=$('.bkbar');if(b)b.remove();}break;
  case'install':doInstall();break;
